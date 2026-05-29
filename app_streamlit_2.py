@@ -149,20 +149,24 @@ with st.sidebar:
     st.divider()
     st.subheader("🔑 API 키 설정")
 
+    # Streamlit Cloud Secrets 에서 먼저 읽고, 없으면 환경변수, 없으면 빈 값
+    _kma_secret    = st.secrets.get("KMA_API_KEY", "")    if hasattr(st, "secrets") else ""
+    _claude_secret = st.secrets.get("ANTHROPIC_API_KEY", "") if hasattr(st, "secrets") else ""
+
     KMA_Key = st.text_input(
         "기상청 API 키 (선택)",
-        value=os.environ.get("KMA_API_KEY", ""),
+        value=_kma_secret or os.environ.get("KMA_API_KEY", ""),
         type="password",
-        help="data.go.kr → 기상청 단기예보 활용신청 후 발급"
+        help="data.go.kr → 기상청 ASOS 일자료 활용신청 후 발급"
     )
     Claude_Key = st.text_input(
         "Claude AI 키 (선택)",
-        value=os.environ.get("ANTHROPIC_API_KEY", ""),
+        value=_claude_secret or os.environ.get("ANTHROPIC_API_KEY", ""),
         type="password",
         help="console.anthropic.com 에서 발급"
     )
-    if KMA_Key:    os.environ["KMA_API_KEY"]         = KMA_Key
-    if Claude_Key: os.environ["ANTHROPIC_API_KEY"]   = Claude_Key
+    if KMA_Key:    os.environ["KMA_API_KEY"]       = KMA_Key
+    if Claude_Key: os.environ["ANTHROPIC_API_KEY"] = Claude_Key
 
     st.divider()
     Run_Btn = st.button("🚀 분석 실행", use_container_width=True, type="primary")
