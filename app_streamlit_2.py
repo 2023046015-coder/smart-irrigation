@@ -149,19 +149,26 @@ with st.sidebar:
     st.divider()
     st.subheader("🔑 API 키 설정")
 
-    # Streamlit Cloud Secrets 에서 먼저 읽고, 없으면 환경변수, 없으면 빈 값
-    _kma_secret    = st.secrets.get("KMA_API_KEY", "")    if hasattr(st, "secrets") else ""
-    _claude_secret = st.secrets.get("ANTHROPIC_API_KEY", "") if hasattr(st, "secrets") else ""
+    # Streamlit Cloud Secrets → 환경변수 순서로 읽기
+    try:
+        _kma_secret = st.secrets["KMA_API_KEY"]
+    except Exception:
+        _kma_secret = os.environ.get("KMA_API_KEY", "")
+
+    try:
+        _claude_secret = st.secrets["ANTHROPIC_API_KEY"]
+    except Exception:
+        _claude_secret = os.environ.get("ANTHROPIC_API_KEY", "")
 
     KMA_Key = st.text_input(
         "기상청 API 키 (선택)",
-        value=_kma_secret or os.environ.get("KMA_API_KEY", ""),
+        value=_kma_secret,
         type="password",
         help="data.go.kr → 기상청 ASOS 일자료 활용신청 후 발급"
     )
     Claude_Key = st.text_input(
         "Claude AI 키 (선택)",
-        value=_claude_secret or os.environ.get("ANTHROPIC_API_KEY", ""),
+        value=_claude_secret,
         type="password",
         help="console.anthropic.com 에서 발급"
     )
