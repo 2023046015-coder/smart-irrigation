@@ -201,8 +201,14 @@ if not BACKEND_OK:
 # ══════════════════════════════════════════════════════
 
 if Run_Btn:
+    # 분석 실행 시점에 Secrets 에서 직접 키 읽기
+    try:
+        _run_kma_key = st.secrets["KMA_API_KEY"]
+    except Exception:
+        _run_kma_key = KMA_Key or None
+
     with st.spinner("📡 데이터 수집 중..."):
-        CW = collect_weather(Days, Season, KMA_Key or None, "data/raw")
+        CW = collect_weather(Days, Season, _run_kma_key or None, "data/raw")
         W_Raw = CW["data"]
 
     col_prog = st.empty()
