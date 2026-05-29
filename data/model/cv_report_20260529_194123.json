@@ -1,0 +1,66 @@
+{
+  "cv": {
+    "mean_accuracy": 1.0,
+    "mean_f1": 0.5,
+    "std_accuracy": 0.0,
+    "method": "3-Fold 교차검증"
+  },
+  "final": {
+    "accuracy": 1.0,
+    "macro_f1": 0.25,
+    "class_metrics": {
+      "즉시관수": {
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "Support": 0
+      },
+      "관수권장": {
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "Support": 0
+      },
+      "적정상태": {
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "Support": 0
+      },
+      "과습주의": {
+        "Precision": 1.0,
+        "Recall": 1.0,
+        "F1": 1.0,
+        "Support": 6
+      }
+    },
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        6
+      ]
+    ]
+  },
+  "crop": "상추/채소",
+  "ts": "20260529_194123"
+}
