@@ -168,7 +168,7 @@ def collect_weather(
                 "endDt":   Today.strftime("%Y%m%d"), "stnIds": "131",
             }
             R = requests.get(
-                "http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList",
+                "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList",
                 params=Params, timeout=10
             )
             Items = R.json().get("response", {}).get("body", {}).get("items", {}).get("item", [])
