@@ -44,20 +44,7 @@ except ImportError as E:
 # ══════════════════════════════════════════════════════
 
 def get_secret(Key_Name: str) -> str:
-    """
-    [워크플로우]
-    ◇ Streamlit Secrets에 키 있음?
-      Yes → 키 반환
-      No  ◇ 환경변수에 키 있음?
-              Yes → 키 반환
-              No  → 빈 문자열 반환
-    """
-    try:
-        Value = st.secrets[Key_Name]
-        if Value:
-            return Value
-    except Exception:
-        pass
+    """환경변수에서 키 읽기"""
     return os.environ.get(Key_Name, "")
 
 
@@ -148,7 +135,7 @@ with st.sidebar:
     Run_Btn = st.button("🚀 분석 실행", use_container_width=True, type="primary")
 
     # 연동 상태 표시
-    KMA_OK = bool(get_secret("KMA_API_KEY") or KMA_Input.strip())
+    KMA_OK = bool(KMA_Input.strip() or get_secret("KMA_API_KEY"))
     if KMA_OK:
         st.success("✅ 기상청 API 연동됨")
     else:
@@ -168,9 +155,9 @@ st.caption(f"기상 · 토양 데이터 기반 농업 용수 관리 | {datetime.
 # ══════════════════════════════════════════════════════
 
 if Run_Btn:
-    # Secrets → 직접입력 순서로 키 읽기
-    KMA_Key    = get_secret("KMA_API_KEY")    or KMA_Input.strip()    or None
-    Claude_Key = get_secret("ANTHROPIC_API_KEY") or Claude_Input.strip() or None
+    # 사이드바 직접 입력 우선 → 환경변수
+    KMA_Key    = KMA_Input.strip()    or get_secret("KMA_API_KEY")    or None
+    Claude_Key = Claude_Input.strip() or get_secret("ANTHROPIC_API_KEY") or None
 
     # ── 진행 바 ──────────────────────────────────────
     Progress = st.progress(0, text="1단계: 데이터 수집 중...")
