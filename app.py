@@ -131,27 +131,24 @@ with st.sidebar:
     st.caption("Streamlit Cloud Secrets 에 저장된 키가 자동으로 사용됩니다.")
 
     # 사이드바에는 표시만 (실제 사용은 버튼 클릭 시점에 읽음)
-    KMA_Display    = "●●●●● (Secrets 등록됨)" if get_secret("KMA_API_KEY")    else ""
-    Claude_Display = "●●●●● (Secrets 등록됨)" if get_secret("ANTHROPIC_API_KEY") else ""
-
     KMA_Input = st.text_input(
-        "기상청 API 키 (직접 입력 시)",
-        value=KMA_Display,
+        "기상청 API 키",
+        value="",
         type="password",
-        help="비워두면 Secrets 에서 자동으로 읽음"
+        help="data.go.kr 에서 복사한 키를 여기에 붙여넣기"
     )
     Claude_Input = st.text_input(
-        "Claude AI 키 (직접 입력 시)",
-        value=Claude_Display,
+        "Claude AI 키 (선택)",
+        value="",
         type="password",
-        help="비워두면 Secrets 에서 자동으로 읽음"
+        help="없어도 됨"
     )
 
     st.divider()
     Run_Btn = st.button("🚀 분석 실행", use_container_width=True, type="primary")
 
     # 연동 상태 표시
-    KMA_OK = bool(get_secret("KMA_API_KEY") or (KMA_Input and "●" not in KMA_Input))
+    KMA_OK = bool(get_secret("KMA_API_KEY") or KMA_Input.strip())
     if KMA_OK:
         st.success("✅ 기상청 API 연동됨")
     else:
@@ -171,19 +168,9 @@ st.caption(f"기상 · 토양 데이터 기반 농업 용수 관리 | {datetime.
 # ══════════════════════════════════════════════════════
 
 if Run_Btn:
-    # ◇ Secrets / 직접입력 키 결정
-    # Secrets 우선 → 직접 입력 → None
-    KMA_Key    = get_secret("KMA_API_KEY")
-    Claude_Key = get_secret("ANTHROPIC_API_KEY")
-
-    # 직접 입력한 경우 (●이 없는 실제 키값)
-    if KMA_Input and "●" not in KMA_Input and KMA_Input.strip():
-        KMA_Key = KMA_Input.strip()
-    if Claude_Input and "●" not in Claude_Input and Claude_Input.strip():
-        Claude_Key = Claude_Input.strip()
-
-    KMA_Key    = KMA_Key    or None
-    Claude_Key = Claude_Key or None
+    # Secrets → 직접입력 순서로 키 읽기
+    KMA_Key    = get_secret("KMA_API_KEY")    or KMA_Input.strip()    or None
+    Claude_Key = get_secret("ANTHROPIC_API_KEY") or Claude_Input.strip() or None
 
     # ── 진행 바 ──────────────────────────────────────
     Progress = st.progress(0, text="1단계: 데이터 수집 중...")
